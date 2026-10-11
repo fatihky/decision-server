@@ -5,6 +5,11 @@
 # `python -m decision_server.scripts.generate_catalog`.
 #
 # 'origin' is the canonical upstream checkpoint this GGUF was converted from.
+#
+# The repository list was extracted from S1MB (System One Mosaic Benchmark,
+# MIT): https://github.com/hotchpotch/S1MB — see its evaluator/upstream-models.json
+# and evaluator/OPEN_MODELS.md. 'origin' names the checkpoint S1MB evaluates;
+# this catalog serves its GGUF mirror through llama-server instead.
 gguf:
   - id: abhishek085__spark-s1-4b-v6-GGUF
     label: abhishek085/spark-s1-4b-v6-GGUF

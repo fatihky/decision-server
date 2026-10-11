@@ -62,6 +62,14 @@ The catalog has three sources:
 3. **`families.yaml`** — repositories with no decision GGUF, served through
    in-process family plugins (see below).
 
+The generated catalogs were derived from the model roster of
+[S1MB — System One Mosaic Benchmark](https://github.com/hotchpotch/S1MB),
+specifically its [`evaluator/upstream-models.json`](https://github.com/hotchpotch/S1MB/blob/main/evaluator/upstream-models.json)
+and [`evaluator/OPEN_MODELS.md`](https://github.com/hotchpotch/S1MB/blob/main/evaluator/OPEN_MODELS.md).
+Where S1MB evaluates a native checkpoint, this catalog points at the matching
+GGUF mirror or the repository's own published interface; see
+[Provenance](#provenance) below.
+
 Plus live discovery: browse the Hub `decision-model` tag from the UI or CLI.
 
 One server exposes both interfaces: a JSON HTTP API at the root and the Gradio
@@ -231,7 +239,13 @@ python -m decision_server.scripts.generate_catalog repos.txt \
 ```
 
 Add `--include-discovered` to also pull recent repositories from the Hub
-`decision-model` tag.
+`decision-model` tag. The seed list itself comes from S1MB's pinned model
+roster (see [Provenance](#provenance)):
+
+```sh
+curl -s https://raw.githubusercontent.com/hotchpotch/S1MB/main/evaluator/upstream-models.json \
+  | jq -r '.[].model // empty' | sort -u > repos.txt
+```
 
 ## How a model is served
 
@@ -348,8 +362,8 @@ src/decision_server/
   servable.py     GGUF and transformer auto-download backends
   registry.py     catalog loader and backend construction
   models.yaml     curated catalog
-  ecosystem.yaml  generated GGUF catalog
-  families.yaml   generated in-process plugin catalog
+  ecosystem.yaml  generated GGUF catalog (S1MB-derived roster)
+  families.yaml   generated in-process plugin catalog (S1MB-derived roster)
   service.py      request execution
   samples.py      bundled example requests
   app.py          Gradio UI
@@ -363,6 +377,31 @@ src/decision_server/
     code_loader.py          load code a repo ships
   scripts/        catalog generator
 ```
+
+## Provenance
+
+The list of servable models and families was extracted from
+[S1MB — System One Mosaic Benchmark](https://github.com/hotchpotch/S1MB)
+(MIT licensed), which compares System One decision models across 137
+benchmarks. Useful references:
+
+| Reference | What it gives you |
+| --- | --- |
+| [`evaluator/upstream-models.json`](https://github.com/hotchpotch/S1MB/blob/main/evaluator/upstream-models.json) | adapter, source repository, pinned commit and Hub revision per model — the seed list for `ecosystem.yaml` and `families.yaml` |
+| [`evaluator/OPEN_MODELS.md`](https://github.com/hotchpotch/S1MB/blob/main/evaluator/OPEN_MODELS.md) | per-adapter interface notes: rendering, calibration, input budgets, candidate limits — the basis for choosing each family plugin |
+| [`docs/adapters.md`](https://github.com/hotchpotch/S1MB/blob/main/docs/adapters.md) | the typed adapter contract (`Choice` / `Noul` / `Score`) this server's request format mirrors |
+| [S1MB leaderboard](https://huggingface.co/spaces/hotchpotch/S1MB-leaderboard) | measured results, if you want to pick a model |
+
+Two differences are deliberate. S1MB evaluates each model through a dedicated
+adapter against a pinned upstream checkout; this server serves the same models
+through the uniform `/v1/systemone` contract, so a native checkpoint becomes
+either its GGUF mirror (served by `llama-server`) or an in-process family
+plugin. S1MB's scores are also not a claim about this server's plugins: as
+noted under [Family plugins](#family-plugins), `peft-decision` reconstructs a
+decision head rather than reproducing the family scorer.
+
+Model weights, upstream inference code and their licenses belong to their own
+authors; nothing is vendored or redistributed here.
 
 ## Development
 

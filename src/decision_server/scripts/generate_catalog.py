@@ -14,6 +14,18 @@ Run it once to (re)build the catalog, or point it at your own repo list::
 ``repos.txt`` is one repository ID per line; blank lines and ``#`` comments are
 ignored. ``--include-discovered`` also pulls recent repositories from the Hub
 ``decision-model`` tag.
+
+The bundled catalogs were built from the model roster of S1MB (System One
+Mosaic Benchmark, MIT): https://github.com/hotchpotch/S1MB — extract the
+``model`` values of its ``evaluator/upstream-models.json`` to reproduce the
+input list::
+
+    curl -s https://raw.githubusercontent.com/hotchpotch/S1MB/main/evaluator/upstream-models.json \\
+      | jq -r '.[].model // empty' | sort -u > repos.txt
+
+S1MB drives each model through a dedicated adapter against a pinned upstream
+checkout; ``ecosystem.yaml`` serves the same models from their GGUF mirrors and
+``families.yaml`` from in-process plugins (see the README's Provenance section).
 """
 
 from __future__ import annotations

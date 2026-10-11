@@ -8,6 +8,12 @@
 #   reranker        a cross-encoder or zero-shot classifier over the options
 #
 # Weights and any shipped code are downloaded from the Hub on first use.
+#
+# The repository list and the plugin chosen for each one were extracted from
+# S1MB (System One Mosaic Benchmark, MIT): https://github.com/hotchpotch/S1MB
+# — evaluator/upstream-models.json maps each model to the S1MB adapter that
+# drives it, and evaluator/OPEN_MODELS.md documents that adapter's interface
+# (native inference entry point, decision head, or reranker scoring).
 models:
   - id: Alibaba-NLP__gte-reranker-modernbert-base
     label: Alibaba-NLP/gte-reranker-modernbert-base
