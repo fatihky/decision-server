@@ -32,8 +32,40 @@ uv run decision-server --list      # shows every registered model
 uv run decision-server             # opens http://127.0.0.1:7860
 ```
 
-The UI lets you pick a model, load a bundled sample, edit the request JSON and
-run it. The first call to a local model downloads its weights.
+The UI lets you pick a model, pick one of the bundled examples, edit the
+request JSON and run it. The first call to a local model downloads its weights.
+
+## Examples
+
+29 bundled examples cover every task type and the corners of the contract. The
+UI shows them as a filterable table: choose a category or search by label,
+question id, task or wording, click a row to load its JSON, then **Load & run**.
+The selected row expands into a card listing its questions and options, and
+warns if the chosen model does not support one of its tasks. Answers render as a
+table — top option, confidence bar, expected value for `score` — above the raw
+JSON response.
+
+| Category | Examples | What they show |
+| --- | --- | --- |
+| Basics | 4 | one question per task type, plus all three in a single request |
+| Support desk | 4 | ticket routing, SLA breach risk, whole-thread triage, CSAT |
+| Trust & safety | 4 | toxicity gate, policy category, severity, moderation queue |
+| Commerce | 3 | return reason, chargeback risk, review stars |
+| Finance | 3 | dispute code, anomaly flag, credit band |
+| Agents & RAG | 4 | tool selection, answer groundedness, passage reranking, agent loop |
+| Contract corners | 7 | minimal request, ten-way choice, optional fields, nested state, non-English text, fractional scale, batch judgments |
+
+The same catalog is available from Python:
+
+```python
+from decision_server.samples import sample_json, sample_request, samples
+
+for s in samples():
+    print(s.category, s.name, s.label, s.tasks)
+
+payload = sample_json("ticket-routing")      # request JSON for the editor or curl
+request = sample_request("ticket-routing")   # a typed DecisionRequest
+```
 
 ## What can be served
 
@@ -365,7 +397,7 @@ src/decision_server/
   ecosystem.yaml  generated GGUF catalog (S1MB-derived roster)
   families.yaml   generated in-process plugin catalog (S1MB-derived roster)
   service.py      request execution
-  samples.py      bundled example requests
+  samples.py      bundled example requests (29, grouped by category)
   app.py          Gradio UI
   api.py          JSON HTTP API (FastAPI)
   plugins/
