@@ -75,6 +75,7 @@ models:
       device: cpu
       context_limit: 512
     tasks: [choice, noul]
+    source: https://huggingface.co/FacebookAI/roberta-large-mnli
     description: >-
       Scores each option with a sequence-classification model and softmaxes the
        entailment scores. Configure `model` and `device` before use.
