@@ -1,0 +1,94 @@
+# Catalog of servable decision models.
+#
+# kind:    local | cloud
+# backend: plugin | local-http | cloud
+#
+# Cloud entries proxy a remote typed-question endpoint using a bearer token
+# read from the named environment variable. Set the variable before starting
+# the server to enable the entry.
+#
+# Local entries either run a plugin in-process (backend: plugin) or connect to
+# a caller-managed server (backend: local-http). Plugin-backed models list the
+# Python modules they import under `requires`; an entry is marked unavailable
+# in the UI until those modules can be imported.
+
+models:
+  # --- Cloud models proxied through their own API keys --------------------
+  - id: typesafe
+    label: TypeSafe (hosted)
+    kind: cloud
+    backend: cloud
+    model: typesafe
+    base_url: https://api.typesafe.ai
+    endpoint: /v1/systemone
+    api_key_env: TYPESAFE_API_KEY
+    rounding_decimals: 2
+    tasks: [choice, noul, score]
+    source: https://api.typesafe.ai
+    description: Hosted typed-question endpoint. Requires TYPESAFE_API_KEY.
+
+  - id: liquid
+    label: Liquid (hosted)
+    kind: cloud
+    backend: cloud
+    model: liquid
+    base_url: https://api.liquid.ai
+    endpoint: /decisions/v1/systemone
+    api_key_env: LIQUID_API_KEY
+    rounding_decimals: 4
+    tasks: [choice, noul, score]
+    source: https://api.liquid.ai
+    description: Hosted decision endpoint. Requires LIQUID_API_KEY.
+
+  # --- Caller-managed local servers --------------------------------------
+  - id: llama-server
+    label: Local llama-server
+    kind: local
+    backend: local-http
+    model: local-llama-server
+    base_url: http://127.0.0.1:8080
+    endpoint: /v1/systemone
+    rounding_decimals: 6
+    tasks: [choice, noul, score]
+    source: http://127.0.0.1:8080
+    description: >-
+      Forward typed questions to a llama-server started separately with a
+      decision GGUF that exposes /v1/systemone.
+
+  # --- In-process plugin models ------------------------------------------
+  - id: uniform-demo
+    label: Uniform demo (offline)
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.uniform
+    tasks: [choice, noul, score]
+    description: Returns uniform probabilities. For pipeline checks, not measurement.
+
+  - id: transformers-classifier
+    label: Transformers sequence classifier
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.transformers_classifier
+    requires: [torch, transformers]
+    config:
+      model: FacebookAI/roberta-large-mnli
+      device: cpu
+      context_limit: 512
+    tasks: [choice, noul]
+    description: >-
+      Scores each option with a sequence-classification model and softmaxes the
+       entailment scores. Configure `model` and `device` before use.
+
+  # --- Transformer decision models with custom code (auto_map) -----------
+  # Downloaded on first use through the Hub and loaded with trust_remote_code.
+  - id: meta-encoder
+    label: Meta Encoder
+    kind: local
+    backend: automap
+    repo_id: facebook/meta-encoder
+    tasks: [choice, noul, score]
+    description: Text-choice encoder loaded from the Hub through its custom code.
+
+  # Note: the remaining decision models on the Hub ship PEFT LoRAs, family
+  # packages or bare head checkpoints with no uniform interface. Add them as
+  # plugin backends under `plugins/` (see README) when you need that family.

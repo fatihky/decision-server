@@ -1,0 +1,637 @@
+# Catalog of decision-model families served through in-process plugins.
+#
+# These repositories do not ship a decision GGUF, so they are loaded with the
+# plugin that matches their published interface:
+#
+#   repo-inference  the repo's own inference.py / model.py entry point
+#   peft-decision   a PEFT LoRA adapter plus a decision head (head.pt)
+#   reranker        a cross-encoder or zero-shot classifier over the options
+#
+# Weights and any shipped code are downloaded from the Hub on first use.
+models:
+  - id: Alibaba-NLP__gte-reranker-modernbert-base
+    label: Alibaba-NLP/gte-reranker-modernbert-base
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Alibaba-NLP/gte-reranker-modernbert-base
+      device: cpu
+  - id: AndeyTait__JevForge-0.8B
+    label: AndeyTait/JevForge-0.8B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: AndeyTait/JevForge-0.8B
+      device: cpu
+  - id: BAAI__bge-reranker-v2-m3
+    label: BAAI/bge-reranker-v2-m3
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: BAAI/bge-reranker-v2-m3
+      device: cpu
+  - id: Cactus-Compute__needle3
+    label: Cactus-Compute/needle3
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Cactus-Compute/needle3
+      device: cpu
+  - id: Contrastive-LM__CLM-v0.1-8B
+    label: Contrastive-LM/CLM-v0.1-8B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Contrastive-LM/CLM-v0.1-8B
+      device: cpu
+  - id: DangerLabs__DM-JEPA
+    label: DangerLabs/DM-JEPA
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: DangerLabs/DM-JEPA
+      device: cpu
+  - id: EldanRing__Winnow-12B
+    label: EldanRing/Winnow-12B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: EldanRing/Winnow-12B
+      device: cpu
+  - id: LibertAIDAI__deem-0.8-v1
+    label: LibertAIDAI/deem-0.8-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: LibertAIDAI/deem-0.8-v1
+      device: cpu
+  - id: Lukitaduarte__dinah-0
+    label: Lukitaduarte/dinah-0
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Lukitaduarte/dinah-0
+      device: cpu
+  - id: Manav2op__verdict-small
+    label: Manav2op/verdict-small
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Manav2op/verdict-small
+      device: cpu
+  - id: MoritzLaurer__ModernBERT-large-zeroshot-v2.0
+    label: MoritzLaurer/ModernBERT-large-zeroshot-v2.0
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: MoritzLaurer/ModernBERT-large-zeroshot-v2.0
+      device: cpu
+  - id: PIXELZX__XERON-0.1
+    label: PIXELZX/XERON-0.1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: PIXELZX/XERON-0.1
+      device: cpu
+  - id: Qwen__Qwen3-Reranker-4B
+    label: Qwen/Qwen3-Reranker-4B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: Qwen/Qwen3-Reranker-4B
+      device: cpu
+  - id: ZefanCai__Open-Jev-2B
+    label: ZefanCai/Open-Jev-2B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: ZefanCai/Open-Jev-2B
+      device: cpu
+  - id: akhilaaa3__Jev-Omni
+    label: akhilaaa3/Jev-Omni
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: akhilaaa3/Jev-Omni
+      device: cpu
+  - id: altslate__certo-decision-model
+    label: altslate/certo-decision-model
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: altslate/certo-decision-model
+      device: cpu
+  - id: caiovicentino1__Eikos-27B
+    label: caiovicentino1/Eikos-27B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: caiovicentino1/Eikos-27B
+      device: cpu
+  - id: caiovicentino1__Eikos-4B
+    label: caiovicentino1/Eikos-4B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: caiovicentino1/Eikos-4B
+      device: cpu
+  - id: com-kotobalabs__open-jev-deberta-v3-large
+    label: com-kotobalabs/open-jev-deberta-v3-large
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: com-kotobalabs/open-jev-deberta-v3-large
+      device: cpu
+  - id: denis-pplx__AutoJev-27B
+    label: denis-pplx/AutoJev-27B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: denis-pplx/AutoJev-27B
+      device: cpu
+  - id: dhtocks__malkuth-2b
+    label: dhtocks/malkuth-2b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: dhtocks/malkuth-2b
+      kind: zeroshot
+      device: cpu
+  - id: dhtocks__malkuth-4b
+    label: dhtocks/malkuth-4b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: dhtocks/malkuth-4b
+      kind: zeroshot
+      device: cpu
+  - id: facebook__meta-encoder
+    label: facebook/meta-encoder
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: facebook/meta-encoder
+      device: cpu
+  - id: fastino__gliner2-large-v1
+    label: fastino/gliner2-large-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: fastino/gliner2-large-v1
+      device: cpu
+  - id: fastino__gliner2.5-base-v1
+    label: fastino/gliner2.5-base-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: fastino/gliner2.5-base-v1
+      device: cpu
+  - id: fastino__gliner2.5-multi-v1
+    label: fastino/gliner2.5-multi-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: fastino/gliner2.5-multi-v1
+      device: cpu
+  - id: fastino__gliner2.5-small-v1
+    label: fastino/gliner2.5-small-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: fastino/gliner2.5-small-v1
+      device: cpu
+  - id: flymy-ai__decision-2b-preview
+    label: flymy-ai/decision-2b-preview
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: flymy-ai/decision-2b-preview
+      device: cpu
+  - id: flymy-ai__decision-4b-v1.1
+    label: flymy-ai/decision-4b-v1.1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: flymy-ai/decision-4b-v1.1
+      device: cpu
+  - id: flymy-ai__decision-4b-v1.2
+    label: flymy-ai/decision-4b-v1.2
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: flymy-ai/decision-4b-v1.2
+      device: cpu
+  - id: flymy-ai__decision-fast-preview
+    label: flymy-ai/decision-fast-preview
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: flymy-ai/decision-fast-preview
+      device: cpu
+  - id: franckverrot__lev-350m
+    label: franckverrot/lev-350m
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: franckverrot/lev-350m
+      device: cpu
+  - id: frontier-infra__jebadiah-9b-v0
+    label: frontier-infra/jebadiah-9b-v0
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: frontier-infra/jebadiah-9b-v0
+      code_file: scripts/decide_standalone.py
+      device: cpu
+  - id: heman10x__rlcd-modernbert-151m
+    label: heman10x/rlcd-modernbert-151m
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: heman10x/rlcd-modernbert-151m
+      device: cpu
+  - id: isHeSatoshi__smalljev-semantic-v9
+    label: isHeSatoshi/smalljev-semantic-v9
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: isHeSatoshi/smalljev-semantic-v9
+      device: cpu
+  - id: jaredpalmer__kev-0.5b
+    label: jaredpalmer/kev-0.5b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: jaredpalmer/kev-0.5b
+      device: cpu
+  - id: jaredpalmer__kev-0.6b
+    label: jaredpalmer/kev-0.6b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: jaredpalmer/kev-0.6b
+      device: cpu
+  - id: jaredpalmer__kev-27b
+    label: jaredpalmer/kev-27b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: jaredpalmer/kev-27b
+      device: cpu
+  - id: jaredpalmer__kev-8b
+    label: jaredpalmer/kev-8b
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: jaredpalmer/kev-8b
+      device: cpu
+  - id: jsaurabh__qwen3.5-9b-jev-data-mix-v2
+    label: jsaurabh/qwen3.5-9b-jev-data-mix-v2
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: jsaurabh/qwen3.5-9b-jev-data-mix-v2
+      device: cpu
+  - id: juspay__jev-one
+    label: juspay/jev-one
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: juspay/jev-one
+      device: cpu
+  - id: knowledgator__gliformer-large-v1
+    label: knowledgator/gliformer-large-v1
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: knowledgator/gliformer-large-v1
+      device: cpu
+  - id: kshetrajna12__reflex-qwen3.5-4b-lora
+    label: kshetrajna12/reflex-qwen3.5-4b-lora
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.peft_decision
+    requires: [torch, transformers, peft]
+    tasks: [choice, noul, score]
+    description: >-
+      PEFT LoRA decision model; the decision head is reconstructed from
+      the checkpoint (head.pt). Probabilities are directionally faithful
+      but are not a verified reproduction of the family scorer.
+    config:
+      repo_id: kshetrajna12/reflex-qwen3.5-4b-lora
+      device: cpu
+  - id: laya-typed-decisions
+    label: laya-typed-decisions
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: laya-typed-decisions
+      device: cpu
+  - id: mghafiri__qwen3.5-0.8B-decision-model
+    label: mghafiri/qwen3.5-0.8B-decision-model
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mghafiri/qwen3.5-0.8B-decision-model
+      device: cpu
+  - id: mixedbread-ai__mxbai-rerank-base-v2
+    label: mixedbread-ai/mxbai-rerank-base-v2
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mixedbread-ai/mxbai-rerank-base-v2
+      device: cpu
+  - id: mstrasser__Jeff-Gemma4-E2B
+    label: mstrasser/Jeff-Gemma4-E2B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mstrasser/Jeff-Gemma4-E2B
+      kind: zeroshot
+      device: cpu
+  - id: mstrasser__Jeff-Qwen3.5-0.8B
+    label: mstrasser/Jeff-Qwen3.5-0.8B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mstrasser/Jeff-Qwen3.5-0.8B
+      kind: zeroshot
+      device: cpu
+  - id: mstrasser__Jeff-Qwen3.5-0.8B-Chess
+    label: mstrasser/Jeff-Qwen3.5-0.8B-Chess
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mstrasser/Jeff-Qwen3.5-0.8B-Chess
+      kind: zeroshot
+      device: cpu
+  - id: mstrasser__Jeff-Qwen3.5-2B
+    label: mstrasser/Jeff-Qwen3.5-2B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: mstrasser/Jeff-Qwen3.5-2B
+      kind: zeroshot
+      device: cpu
+  - id: noscienthoon__ouro-2.6b-decision-lora
+    label: noscienthoon/ouro-2.6b-decision-lora
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: noscienthoon/ouro-2.6b-decision-lora
+      device: cpu
+  - id: oraculumai__Manchego
+    label: oraculumai/Manchego
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: oraculumai/Manchego
+      kind: zeroshot
+      device: cpu
+  - id: pngwn__system-one-qwen3.5-4b-scorer
+    label: pngwn/system-one-qwen3.5-4b-scorer
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: pngwn/system-one-qwen3.5-4b-scorer
+      code_file: system_one.py
+      device: cpu
+  - id: samatv256__mini-Jev
+    label: samatv256/mini-Jev
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: samatv256/mini-Jev
+      device: cpu
+  - id: wayfind__metask-jev-4b-policy-mix
+    label: wayfind/metask-jev-4b-policy-mix
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: wayfind/metask-jev-4b-policy-mix
+      device: cpu
+  - id: wfzyx__von
+    label: wfzyx/von
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: wfzyx/von
+      kind: zeroshot
+      device: cpu
+  - id: zeredy879__minojev
+    label: zeredy879/minojev
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.repo_inference
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: zeredy879/minojev
+      device: cpu
+  - id: zeroentropy__zerank-2-reranker
+    label: zeroentropy/zerank-2-reranker
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    config:
+      repo_id: zeroentropy/zerank-2-reranker
+      device: cpu

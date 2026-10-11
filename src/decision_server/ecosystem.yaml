@@ -1,0 +1,205 @@
+# Auto-generated catalog of SystemOne-compatible decision models on the Hub.
+#
+# Each entry is served through llama.cpp's native /v1/systemone endpoint. The
+# GGUF weights are downloaded on first use and cached. Regenerate with
+# `python -m decision_server.scripts.generate_catalog`.
+#
+# 'origin' is the canonical upstream checkpoint this GGUF was converted from.
+gguf:
+  - id: abhishek085__spark-s1-4b-v6-GGUF
+    label: abhishek085/spark-s1-4b-v6-GGUF
+    repo_id: abhishek085/spark-s1-4b-v6-GGUF
+    gguf_file: spark-s1-4b-v6-Q8_0.gguf
+    origin: abhishek085/spark-s1-4b-v6
+    tasks: [choice, noul, score]
+  - id: alibiserikbay__JevK5-GGUF
+    label: alibiserikbay/JevK5-GGUF
+    repo_id: alibiserikbay/JevK5-GGUF
+    gguf_file: jevk5-4b-v0.2-Q4_K_M.gguf
+    origin: alibiserikbay/JevK5
+    tasks: [choice, noul, score]
+  - id: AnkitAI__TinyJev-4B
+    label: AnkitAI/TinyJev-4B
+    repo_id: AnkitAI/TinyJev-4B
+    gguf_file: TinyJev-4B-Q4_K_M.gguf
+    tasks: [choice, noul, score]
+  - id: crh225__plumb-4b-GGUF
+    label: crh225/plumb-4b-GGUF
+    repo_id: crh225/plumb-4b-GGUF
+    gguf_file: plumb-4b-v5-Q4_K_M.gguf
+    origin: crh225/plumb-4b
+    tasks: [choice, noul, score]
+  - id: darkgoatie__TinyJev-0.6B-GGUF
+    label: darkgoatie/TinyJev-0.6B-GGUF
+    repo_id: darkgoatie/TinyJev-0.6B-GGUF
+    gguf_file: TinyJev-0.6B-f16.gguf
+    origin: AnkitAI/tinyjev-0.6b
+    tasks: [choice, noul, score]
+  - id: DreamBlooms__Tev1-0.8B-experimental-GGUF
+    label: DreamBlooms/Tev1-0.8B-experimental-GGUF
+    repo_id: DreamBlooms/Tev1-0.8B-experimental-GGUF
+    gguf_file: tev1-Q8_0.gguf
+    origin: togethercomputer/Tev1-0.8B-experimental
+    tasks: [choice, noul, score]
+  - id: evalengine__decision-4b-gguf
+    label: evalengine/decision-4b-gguf
+    repo_id: evalengine/decision-4b-gguf
+    gguf_file: decision-4b-Q4_K_M.gguf
+    origin: evalengine/decision-4b
+    tasks: [choice, noul, score]
+  - id: ggml-org__Bespoke-Nimble-9B-v3-GGUF
+    label: ggml-org/Bespoke-Nimble-9B-v3-GGUF
+    repo_id: ggml-org/Bespoke-Nimble-9B-v3-GGUF
+    gguf_file: Bespoke-Nimble-9B-v3-Q4_K_M.gguf
+    origin: bespokelabs/Bespoke-Nimble-9B
+    tasks: [choice, noul, score]
+  - id: ggml-org__Clef-Flash-GGUF
+    label: ggml-org/Clef-Flash-GGUF
+    repo_id: ggml-org/Clef-Flash-GGUF
+    gguf_file: Clef-Flash-Q4_K_M.gguf
+    origin: Cloudflare/clef
+    tasks: [choice, noul, score]
+  - id: ggml-org__Julia-1-GGUF
+    label: ggml-org/Julia-1-GGUF
+    repo_id: ggml-org/Julia-1-GGUF
+    gguf_file: Julia-1-Q8_0.gguf
+    origin: SupersonicLabs/Julia-1
+    tasks: [choice, noul, score]
+  - id: ggml-org__Kev-0.8B-GGUF
+    label: ggml-org/Kev-0.8B-GGUF
+    repo_id: ggml-org/Kev-0.8B-GGUF
+    gguf_file: Kev-0.8B-Q8_0.gguf
+    origin: jaredpalmer/kev-0.8b
+    tasks: [choice, noul, score]
+  - id: ggml-org__Kev-4B-GGUF
+    label: ggml-org/Kev-4B-GGUF
+    repo_id: ggml-org/Kev-4B-GGUF
+    gguf_file: Kev-4B-Q4_K_M.gguf
+    origin: jaredpalmer/kev-4b
+    tasks: [choice, noul, score]
+  - id: ggml-org__Kev-9B-GGUF
+    label: ggml-org/Kev-9B-GGUF
+    repo_id: ggml-org/Kev-9B-GGUF
+    gguf_file: Kev-9B-Q4_K_M.gguf
+    origin: jaredpalmer/kev-9b
+    tasks: [choice, noul, score]
+  - id: ggml-org__Laya-GGUF
+    label: ggml-org/Laya-GGUF
+    repo_id: ggml-org/Laya-GGUF
+    gguf_file: Laya-Q8_0.gguf
+    origin: convaiinnovations/laya
+    tasks: [choice, noul, score]
+  - id: ggml-org__OpenJev-GGUF
+    label: ggml-org/OpenJev-GGUF
+    repo_id: ggml-org/OpenJev-GGUF
+    gguf_file: OpenJev-Q4_K_M.gguf
+    origin: AlexWortega/openjev
+    tasks: [choice, noul, score]
+  - id: Hanno-Labs__bosun-v3.1-0.6b-GGUF
+    label: Hanno-Labs/bosun-v3.1-0.6b-GGUF
+    repo_id: Hanno-Labs/bosun-v3.1-0.6b-GGUF
+    gguf_file: bosun-v3.1-0.6b-Q4_K_M.gguf
+    origin: Hanno-Labs/bosun-v3.1-0.6b
+    tasks: [choice, noul, score]
+  - id: Hanno-Labs__bosun-v3.1-1.7b-GGUF
+    label: Hanno-Labs/bosun-v3.1-1.7b-GGUF
+    repo_id: Hanno-Labs/bosun-v3.1-1.7b-GGUF
+    gguf_file: bosun-v3.1-1.7b-Q8_0.gguf
+    origin: Hanno-Labs/bosun-v3.1-1.7b
+    tasks: [choice, noul, score]
+  - id: iapp__OpenThai-SystemOne-GGUF
+    label: iapp/OpenThai-SystemOne-GGUF
+    repo_id: iapp/OpenThai-SystemOne-GGUF
+    gguf_file: OpenThai-SystemOne-v0.3-Q4_K_M.gguf
+    origin: iapp/OpenThai-SystemOne
+    tasks: [choice, noul, score]
+  - id: Mapika__decider-2b-GGUF
+    label: Mapika/decider-2b-GGUF
+    repo_id: Mapika/decider-2b-GGUF
+    gguf_file: decider-2b-v11-Q4_K_M.gguf
+    origin: Mapika/decider-2b
+    tasks: [choice, noul, score]
+  - id: mindchain__decider-4b-v2-GGUF
+    label: mindchain/decider-4b-v2-GGUF
+    repo_id: mindchain/decider-4b-v2-GGUF
+    gguf_file: decider-4b.v2-Q4_K_M.gguf
+    origin: Mapika/decider-4b
+    tasks: [choice, noul, score]
+  - id: mindchain__hopper-GGUF
+    label: mindchain/hopper-GGUF
+    repo_id: mindchain/hopper-GGUF
+    gguf_file: hopper.Q4_K_M.gguf
+    origin: HopitAI/hopper
+    tasks: [choice, noul, score]
+  - id: mindchain__imajev-4b-GGUF
+    label: mindchain/imajev-4b-GGUF
+    repo_id: mindchain/imajev-4b-GGUF
+    gguf_file: imajev-4b-Q4_K_M.gguf
+    origin: mohit67890/imajev-4b
+    tasks: [choice, noul, score]
+  - id: mradermacher__decider-0.8b-GGUF
+    label: mradermacher/decider-0.8b-GGUF
+    repo_id: mradermacher/decider-0.8b-GGUF
+    gguf_file: decider-0.8b.Q4_K_M.gguf
+    origin: Mapika/decider-0.8b
+    tasks: [choice, noul, score]
+  - id: mradermacher__decider-35b-a3b-GGUF
+    label: mradermacher/decider-35b-a3b-GGUF
+    repo_id: mradermacher/decider-35b-a3b-GGUF
+    gguf_file: decider-35b-a3b.Q4_K_M.gguf
+    origin: Mapika/decider-35b-a3b
+    tasks: [choice, noul, score]
+  - id: mradermacher__Jeff-1.0-Large-GGUF
+    label: mradermacher/Jeff-1.0-Large-GGUF
+    repo_id: mradermacher/Jeff-1.0-Large-GGUF
+    gguf_file: Jeff-1.0-Large.Q4_K_M.gguf
+    origin: GestaltLabs/Jeff-1
+    tasks: [choice, noul, score]
+  - id: mradermacher__rune-26b-a4b-GGUF
+    label: mradermacher/rune-26b-a4b-GGUF
+    repo_id: mradermacher/rune-26b-a4b-GGUF
+    gguf_file: rune-26b-a4b.Q4_K_M.gguf
+    origin: michaelfeil/rune-26b-a4b
+    tasks: [choice, noul, score]
+  - id: OPENGRAPE__Jeva-9b
+    label: OPENGRAPE/Jeva-9b
+    repo_id: OPENGRAPE/Jeva-9b
+    gguf_file: gguf/model-Q4_K_M.gguf
+    origin: ZefanCai/Open-Jev-9B
+    tasks: [choice, noul, score]
+  - id: prithivMLmods__APUS-OpenJev-v1-4B-GGUF
+    label: prithivMLmods/APUS-OpenJev-v1-4B-GGUF
+    repo_id: prithivMLmods/APUS-OpenJev-v1-4B-GGUF
+    gguf_file: APUS-OpenJev-v1-4B.Q4_K_M.gguf
+    origin: apus-ailab/APUS-OpenJev-v1-4B
+    tasks: [choice, noul, score]
+  - id: prithivMLmods__APUS-OpenJev-v1-9B-GGUF
+    label: prithivMLmods/APUS-OpenJev-v1-9B-GGUF
+    repo_id: prithivMLmods/APUS-OpenJev-v1-9B-GGUF
+    gguf_file: APUS-OpenJev-v1-9B.Q4_K_M.gguf
+    origin: apus-ailab/APUS-OpenJev-v1-9B
+    tasks: [choice, noul, score]
+  - id: prithivMLmods__Tev1-4B-experimental-GGUF
+    label: prithivMLmods/Tev1-4B-experimental-GGUF
+    repo_id: prithivMLmods/Tev1-4B-experimental-GGUF
+    gguf_file: Tev1-4B-experimental.Q4_K_M.gguf
+    origin: togethercomputer/Tev1-4B-experimental
+    tasks: [choice, noul, score]
+  - id: russian-oracle__laya-multilingual-GGUF
+    label: russian-oracle/laya-multilingual-GGUF
+    repo_id: russian-oracle/laya-multilingual-GGUF
+    gguf_file: laya-multilingual-Q8_0.gguf
+    origin: laya-multilingual
+    tasks: [choice, noul, score]
+  - id: StandardThinking__StandardOne-8B-GGUF
+    label: StandardThinking/StandardOne-8B-GGUF
+    repo_id: StandardThinking/StandardOne-8B-GGUF
+    gguf_file: StandardOne-8B-Q4_K_M.gguf
+    origin: StandardThinking/StandardOne-8B
+    tasks: [choice, noul, score]
+  - id: TokenRhythm__NeoHorse-Jev-4B-GGUF
+    label: TokenRhythm/NeoHorse-Jev-4B-GGUF
+    repo_id: TokenRhythm/NeoHorse-Jev-4B-GGUF
+    gguf_file: NeoHorse-Jev-4B-Q4_K_M.gguf
+    origin: TokenRhythm/NeoHorse-Jev-4B
+    tasks: [choice, noul, score]
