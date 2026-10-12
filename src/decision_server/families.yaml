@@ -255,8 +255,8 @@ models:
     label: fastino/GLiNER2.5-Decide
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     source: https://huggingface.co/fastino/GLiNER2.5-Decide
     config:
@@ -266,8 +266,8 @@ models:
     label: fastino/GLiNER2.5-Decide-1B
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     source: https://huggingface.co/fastino/GLiNER2.5-Decide-1B
     config:
@@ -277,8 +277,8 @@ models:
     label: fastino/gliner2-large-v1
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     config:
       repo_id: fastino/gliner2-large-v1
@@ -287,8 +287,8 @@ models:
     label: fastino/gliner2.5-base-v1
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     config:
       repo_id: fastino/gliner2.5-base-v1
@@ -297,8 +297,8 @@ models:
     label: fastino/gliner2.5-multi-v1
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     config:
       repo_id: fastino/gliner2.5-multi-v1
@@ -307,8 +307,8 @@ models:
     label: fastino/gliner2.5-small-v1
     kind: local
     backend: plugin
-    plugin: decision_server.plugins.reranker
-    requires: [torch, transformers]
+    plugin: decision_server.plugins.gliner2
+    requires: [gliner2]
     tasks: [choice, noul, score]
     config:
       repo_id: fastino/gliner2.5-small-v1

@@ -109,20 +109,22 @@ UI at `/ui`.
 
 ## Family plugins
 
-Repositories that ship no decision GGUF are loaded by one of three plugins,
+Repositories that ship no decision GGUF are loaded by one of four plugins,
 chosen from their published interface:
 
 | Plugin | Interface it expects | Examples |
 | --- | --- | --- |
 | `repo-inference` | the repo's own `inference.py`/`model.py` entry point (`DecisionModel.from_pretrained(...).decide(...)`) | mini-Jev, ouro, Manchego, Eikos, Jev-Omni, JevForge, minojev |
 | `peft-decision` | a PEFT LoRA adapter plus a `head.pt` decision head, scored over option letters | kev-0.5b/0.6b/8b/27b, lev-350m, ouro, reflex, jebadiah, smalljev |
-| `reranker` | a cross-encoder or zero-shot classifier scoring each option against the state | gte-reranker, bge-reranker, mxbai-rerank, zerank, Jeff, von, gliner2 |
+| `reranker` | a cross-encoder or zero-shot classifier scoring each option against the state | gte-reranker, bge-reranker, mxbai-rerank, zerank, Jeff, von |
+| `gliner2` | a Fastino `gliner2` schema-extraction checkpoint loaded through `gliner2.AutoExtractor` | GLiNER2.5-Decide, GLiNER2.5-Decide-1B, gliner2-large-v1, gliner2.5-{small,base,multi}-v1 |
 
 Each entry lists the runtime modules it needs under `requires`, so the UI
 shows a model as available only once those are installed:
 
 ```sh
 uv sync --extra open-models          # torch + transformers + peft
+uv sync --extra gliner2              # torch + transformers + gliner2
 # or individually:
 uv sync --extra torch --extra transformers --extra peft
 ```
@@ -130,11 +132,25 @@ uv sync --extra torch --extra transformers --extra peft
 Family behaviour is configuration, not code: point `repo_id` at the repository
 and, where the family returns differently-named keys, add an `option_map`.
 
-`repo-inference` and `reranker` are faithful: they use the family's own
-published scoring path. `peft-decision` reconstructs the decision head from the
-checkpoint (`head.pt`), which for most such repositories is the only artifact
-shipped; its probabilities are directionally correct but not a verified
+`repo-inference`, `reranker` and `gliner2` are faithful: they use the family's
+own published scoring path. `peft-decision` reconstructs the decision head from
+the checkpoint (`head.pt`), which for most such repositories is the only
+artifact shipped; its probabilities are directionally correct but not a verified
 reproduction of the family scorer, and the catalog says so.
+
+### Fastino GLiNER2 checkpoints
+
+Fastino's `gliner2` family declares `model_type: gliner2` and a
+`Gliner2ForSchemaExtraction` architecture that Transformers does not register,
+so loading one through `AutoModel` fails with *"has model type gliner2 but
+Transformers does not recognize this architecture"*. The `gliner2` plugin
+loads them through `gliner2.AutoExtractor` instead and scores the option
+descriptions with `classify_text`, reading per-label probabilities from
+`include_confidence=True`. Install its runtime with:
+
+```sh
+uv sync --extra gliner2
+```
 
 A model is listed as available once its requirements are met: GGUF models need
 `llama-server`, transformer models need `torch` + `transformers`, and
