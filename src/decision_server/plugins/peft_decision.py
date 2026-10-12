@@ -15,12 +15,17 @@ Configuration keys:
 
 This is a faithful re-implementation of the published scoring path; it does not
 import family code. For families whose head differs, use ``repo-inference``.
+
+The backbone class follows the adapter's ``task_type``: ``CAUSAL_LM`` loads
+``AutoModelForCausalLM``, anything else (feature-extraction adapters such as kev
+and lev) loads the bare ``AutoModel`` so the LoRA tensors line up.
 """
 
 from __future__ import annotations
 
 import importlib
 import json
+import warnings
 from typing import Any
 
 from ..backend import BackendError
@@ -54,6 +59,7 @@ class PeftDecisionBackend:
         self.head: Any = None
         self.head_kind: str | None = None
         self.head_meta: dict = {}
+        self._feature_extraction = False
 
     def _load(self) -> None:
         if self._loaded:
@@ -87,13 +93,29 @@ class PeftDecisionBackend:
         backbone_kwargs: dict[str, Any] = {"dtype": dtype}
         if self.base_revision:
             backbone_kwargs["revision"] = self.base_revision
-        backbone = transformers.AutoModelForCausalLM.from_pretrained(base, **backbone_kwargs)
-        peft_kwargs = {"subfolder": self.adapter_subfolder} if self.adapter_subfolder else {}
-        self.model = (
-            peft.PeftModel.from_pretrained(backbone, self.repo_id, **peft_kwargs)
-            .to(self.device)
-            .eval()
+        # Adapters trained for feature extraction wrap the bare backbone, so their
+        # tensors are keyed ``base_model.model.layers...``. A causal-LM wrapper adds
+        # another ``model.`` level and PEFT would silently drop every adapter tensor.
+        task_type = str(adapter_config.get("task_type") or "").upper()
+        self._feature_extraction = task_type not in ("", "CAUSAL_LM")
+        auto_class = (
+            transformers.AutoModel
+            if self._feature_extraction
+            else transformers.AutoModelForCausalLM
         )
+        backbone = auto_class.from_pretrained(base, **backbone_kwargs)
+        peft_kwargs = {"subfolder": self.adapter_subfolder} if self.adapter_subfolder else {}
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            model = peft.PeftModel.from_pretrained(backbone, self.repo_id, **peft_kwargs)
+        for record in caught:
+            message = str(record.message)
+            if "missing adapter keys" in message:
+                raise BackendError(
+                    f"PEFT did not apply the adapter weights from {self.repo_id}: {message[:200]}"
+                )
+            warnings.warn(message, record.category, stacklevel=1)
+        self.model = model.to(self.device).eval().requires_grad_(False)
         self.head = self._load_head(directory / self.head_file)
         self._loaded = True
 
@@ -123,7 +145,7 @@ class PeftDecisionBackend:
                  "k.weight": head_state["k.weight"], "k.bias": head_state["k.bias"]}
             )
             _ = load
-            return self.head.to(self.device).float().eval()
+            return self.head.to(self.device).float().eval().requires_grad_(False)
         # Fallback: a plain scalar head.
         self.head_kind = "linear"
         if isinstance(head_state, dict) and "weight" in head_state:
@@ -139,7 +161,7 @@ class PeftDecisionBackend:
             module.weight.copy_(weight)
             if bias is not None:
                 module.bias.copy_(bias.to(self.device).float())
-        return module.to(self.device).eval()
+        return module.to(self.device).eval().requires_grad_(False)
 
     def _encode(self, text: str):
         encoded = self.tokenizer(text, return_tensors="pt", truncation=False)
@@ -150,6 +172,9 @@ class PeftDecisionBackend:
             )
         encoded = {k: v.to(self.device) for k, v in encoded.items()}
         with self.torch.no_grad():
+            if self._feature_extraction:
+                output = self.model(**encoded)
+                return output.last_hidden_state[:, -1, :]
             output = self.model(**encoded, output_hidden_states=True)
         return output.hidden_states[-1][:, -1, :]
 
@@ -161,11 +186,12 @@ class PeftDecisionBackend:
             f"Options:\n{letter}. {option_text}\n\nAnswer: {letter}"
         )
         hidden = self._encode(context)
-        if self.head_kind == "qk":
-            query = self.head.q(hidden)
-            key = self.head.k(self._encode(f"{option_text} {letter}"))
-            return float((query * key).sum(dim=-1)[0])
-        return float(self.head(hidden)[0, 0])
+        with self.torch.no_grad():
+            if self.head_kind == "qk":
+                query = self.head.q(hidden)
+                key = self.head.k(self._encode(f"{option_text} {letter}"))
+                return float((query * key).sum(dim=-1)[0].detach())
+            return float(self.head(hidden)[0, 0].detach())
 
     def predict(self, request: DecisionRequest) -> list[Prediction]:
         self._load()
