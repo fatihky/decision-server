@@ -69,12 +69,12 @@ request = sample_request("ticket-routing")   # a typed DecisionRequest
 
 ## What can be served
 
-97 models ship in the bundled catalog:
+99 models ship in the bundled catalog:
 
 | Backend | Count | How it runs |
 | --- | --- | --- |
 | `gguf` | 33 | downloaded, served by `llama-server` |
-| `plugin` | 60 | in-process family plugins (see below) |
+| `plugin` | 62 | in-process family plugins (see below) |
 | `cloud` | 2 | proxied to TypeSafe / Liquid with an API key |
 | `automap` | 1 | transformer with `trust_remote_code` |
 | `local-http` | 1 | forwarded to a caller-managed server |

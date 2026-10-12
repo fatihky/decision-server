@@ -251,6 +251,28 @@ models:
     config:
       repo_id: facebook/meta-encoder
       device: cpu
+  - id: fastino__GLiNER2.5-Decide
+    label: fastino/GLiNER2.5-Decide
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    source: https://huggingface.co/fastino/GLiNER2.5-Decide
+    config:
+      repo_id: fastino/GLiNER2.5-Decide
+      device: cpu
+  - id: fastino__GLiNER2.5-Decide-1B
+    label: fastino/GLiNER2.5-Decide-1B
+    kind: local
+    backend: plugin
+    plugin: decision_server.plugins.reranker
+    requires: [torch, transformers]
+    tasks: [choice, noul, score]
+    source: https://huggingface.co/fastino/GLiNER2.5-Decide-1B
+    config:
+      repo_id: fastino/GLiNER2.5-Decide-1B
+      device: cpu
   - id: fastino__gliner2-large-v1
     label: fastino/gliner2-large-v1
     kind: local
