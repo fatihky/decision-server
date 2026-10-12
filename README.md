@@ -244,7 +244,7 @@ api = create_api(default_registry())
 
 ## Browsing the Hub
 
-The UI has a **Search Hugging Face Hub** panel: type a query, filter GGUF-only,
+The UI has a **Hub** tab: type a query, filter GGUF-only,
 then paste a repo id and press **Add model** to register and serve it live.
 
 The same discovery is available from the CLI and Python:

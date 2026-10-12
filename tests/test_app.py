@@ -100,7 +100,7 @@ def test_filter_category_and_query_combine(registry: Registry):
 def test_example_rows(registry: Registry):
     rows = example_rows(samples())
     assert len(rows) == len(samples())
-    assert all(len(row) == 5 for row in rows)
+    assert all(len(row) == 3 for row in rows)
     assert all(isinstance(cell, str) for row in rows for cell in row)
 
 

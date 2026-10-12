@@ -16,8 +16,10 @@ _ALL_CATEGORIES = "All categories"
 _BAR_WIDTH = 14
 
 CSS = """
+.model-info { font-size: 0.9rem; opacity: 0.9; margin-top: -0.5rem; }
+.catalog-rail { gap: 0.4rem; }
 .examples-table table { font-size: 0.86rem; }
-.examples-table td { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+.examples-table td { padding-top: 0.3rem; padding-bottom: 0.3rem; }
 .example-card { border-left: 3px solid var(--color-accent, #f97316); padding-left: 0.8rem; }
 .result-summary table { font-size: 0.86rem; }
 """
@@ -43,25 +45,29 @@ def _model_tasks(registry: Registry, model_id: str | None) -> set[str]:
 
 
 def _model_info(registry: Registry, model_id: str) -> str:
+    """Compact one-or-two-line status for the model bar."""
+
     for d in registry.descriptions():
         if d.id == model_id:
-            lines = [
-                f"**{d.label}**",
-                f"- id: `{d.id}`",
-                f"- kind: {d.kind} / backend: {d.backend}",
-                f"- tasks: {', '.join(d.tasks)}",
-            ]
+            line = " · ".join(
+                [
+                    f"**{d.label}**",
+                    f"`{d.id}`",
+                    f"{d.kind}/{d.backend}",
+                    f"tasks: {', '.join(d.tasks)}",
+                ]
+            )
             if d.source:
-                lines.append(f"- source: {d.source}")
+                line += f" · [source]({d.source})"
             if d.revision:
-                lines.append(f"- revision: `{d.revision}`")
+                line += f" · rev `{d.revision[:12]}`"
             if d.requires:
-                lines.append(f"- requires: {', '.join(d.requires)}")
-            if d.description:
-                lines.append(f"\n{d.description}")
+                line += f" · requires: {', '.join(d.requires)}"
             if not d.available:
-                lines.append(f"\n⚠️ Unavailable: {d.unavailable_reason}")
-            return "\n".join(lines)
+                line += f"\n\n⚠️ **Unavailable:** {d.unavailable_reason}"
+            elif d.description:
+                line += f"\n\n{d.description}"
+            return line
     return "_Select a model._"
 
 
@@ -104,12 +110,9 @@ def category_choices() -> list[tuple[str, str]]:
 
 
 def example_rows(items: list[Sample]) -> list[list[str]]:
-    """Table rows for the examples browser."""
+    """Table rows for the catalog rail: label, task badges, question count."""
 
-    return [
-        [smp.label, smp.category, " · ".join(smp.tasks), str(smp.question_count), smp.summary]
-        for smp in items
-    ]
+    return [[smp.label, " · ".join(smp.tasks), str(smp.question_count)] for smp in items]
 
 
 def resolve_row(names: list[str], index: Any) -> str | None:
@@ -212,84 +215,98 @@ def build_app(registry: Registry) -> gr.Blocks:
 
     with gr.Blocks(title="Decision Server", css=CSS) as app:
         gr.Markdown(
-            "# Decision Server\n"
-            "Serve choice, noul and score models behind one typed contract. "
+            "## Decision Server · choice / noul / score behind one typed contract\n"
             "Pick a model, pick an example, press **Run**."
         )
 
-        with gr.Row(equal_height=False):
-            with gr.Column(scale=1, min_width=300):
-                model = gr.Dropdown(
-                    choices=choices,
-                    value=first,
-                    label="Model",
-                    interactive=True,
-                )
-                info = gr.Markdown(_model_info(registry, first) if first else "")
-                run_btn = gr.Button("Run request", variant="primary")
+        # Top bar: the model picker and the single Run action stay visible on
+        # every tab, so "which model" and "run it" are never off-screen.
+        with gr.Row(equal_height=True):
+            model = gr.Dropdown(
+                choices=choices,
+                value=first,
+                label="Model",
+                interactive=True,
+                scale=4,
+                min_width=320,
+            )
+            run_btn = gr.Button("Run", variant="primary", scale=1, min_width=120)
+        info = gr.Markdown(
+            _model_info(registry, first) if first else "_Select a model._",
+            elem_classes=["model-info"],
+        )
 
-            with gr.Column(scale=3, min_width=520):
-                with gr.Group():
-                    gr.Markdown(f"### Examples ({len(samples())})")
-                    with gr.Row():
-                        category = gr.Dropdown(
-                            choices=category_choices(),
-                            value="",
-                            label="Category",
-                            scale=2,
+        with gr.Tabs():
+            with gr.Tab("Playground"):
+                with gr.Row(equal_height=False):
+                    # Left rail: the browsable example catalog.
+                    with gr.Column(scale=2, min_width=340, elem_classes=["catalog-rail"]):
+                        with gr.Row():
+                            category = gr.Dropdown(
+                                choices=category_choices(),
+                                value="",
+                                label="Category",
+                                scale=2,
+                            )
+                            example_filter = gr.Textbox(
+                                label="Filter",
+                                placeholder="search labels, questions, tasks…",
+                                scale=3,
+                            )
+                        examples_table = gr.Dataframe(
+                            headers=["Example", "Tasks", "Qs"],
+                            datatype=["str", "str", "str"],
+                            value=example_rows(initial_examples),
+                            interactive=False,
+                            wrap=True,
+                            max_height=460,
+                            elem_classes=["examples-table"],
+                            label=f"Examples ({len(samples())}) — click a row to load it",
                         )
-                        example_filter = gr.Textbox(
-                            label="Filter",
-                            placeholder="search labels, questions, tasks…",
-                            scale=3,
+                        run_example_btn = gr.Button("Load & run", variant="primary")
+
+                    # Right: the workspace for the selected example.
+                    with gr.Column(scale=3, min_width=480):
+                        with gr.Accordion("Example details", open=True):
+                            example_detail = gr.Markdown(
+                                example_card(registry, initial_example, first),
+                                elem_classes=["example-card"],
+                            )
+                        request_box = gr.Code(
+                            label="Request JSON",
+                            language="json",
+                            value=sample_json(initial_example),
+                            lines=18,
                         )
-                    examples_table = gr.Dataframe(
-                        headers=["Example", "Category", "Tasks", "Qs", "What it shows"],
-                        datatype=["str", "str", "str", "str", "str"],
-                        value=example_rows(initial_examples),
-                        interactive=False,
-                        wrap=True,
-                        max_height=232,
-                        elem_classes=["examples-table"],
-                        label="Click a row to load it",
-                    )
-                    example_detail = gr.Markdown(
-                        example_card(registry, initial_example, first),
-                        elem_classes=["example-card"],
-                    )
-                    with gr.Row():
-                        load_btn = gr.Button("Load into editor", scale=1)
-                        run_example_btn = gr.Button("Load & run", variant="primary", scale=1)
+                        result_summary = gr.Markdown("", elem_classes=["result-summary"])
+                        with gr.Accordion("Response JSON", open=False):
+                            response_box = gr.Code(
+                                label="Response",
+                                language="json",
+                                value="",
+                                lines=16,
+                            )
 
-                request_box = gr.Code(
-                    label="Request JSON",
-                    language="json",
-                    value=sample_json(initial_example),
-                    lines=22,
+            with gr.Tab("Hub"):
+                gr.Markdown(
+                    "Search the Hugging Face Hub for `decision-model` repositories, then "
+                    "register one to serve it live."
                 )
-                result_summary = gr.Markdown("", elem_classes=["result-summary"])
-                with gr.Accordion("Response JSON", open=True):
-                    response_box = gr.Code(
-                        label="Response",
-                        language="json",
-                        value="",
-                        lines=20,
+                with gr.Row():
+                    hub_query = gr.Textbox(
+                        label="Query", placeholder="e.g. kev, laya, decider", scale=4
                     )
-
-                with gr.Accordion("Search Hugging Face Hub", open=False):
-                    with gr.Row():
-                        hub_query = gr.Textbox(label="Query", placeholder="e.g. kev, laya, decider")
-                        hub_gguf = gr.Checkbox(label="GGUF only", value=True)
-                        hub_search = gr.Button("Search")
-                    hub_results = gr.Dataframe(
-                        headers=["repo_id", "downloads", "servable_via", "gguf_file"],
-                        interactive=False,
-                        wrap=True,
-                    )
-                    with gr.Row():
-                        hub_repo = gr.Textbox(label="Repo id", placeholder="owner/repo")
-                        hub_add = gr.Button("Add model")
-                    hub_status = gr.Markdown("")
+                    hub_gguf = gr.Checkbox(label="GGUF only", value=True, scale=1)
+                    hub_search = gr.Button("Search", scale=1)
+                hub_results = gr.Dataframe(
+                    headers=["repo_id", "downloads", "servable_via", "gguf_file"],
+                    interactive=False,
+                    wrap=True,
+                )
+                with gr.Row():
+                    hub_repo = gr.Textbox(label="Repo id", placeholder="owner/repo", scale=4)
+                    hub_add = gr.Button("Add model", scale=1)
+                hub_status = gr.Markdown("")
 
         # The row order follows the current filter, so keep the visible names
         # alongside the table to resolve a clicked row back to an example.
@@ -336,13 +353,6 @@ def build_app(registry: Registry) -> gr.Blocks:
             outputs=[request_box, example_detail, selected],
             api_name="select_example",
         )
-
-        def _load(name: str):
-            if name not in sample_names():
-                return gr.update()
-            return sample_json(name)
-
-        load_btn.click(fn=_load, inputs=[selected], outputs=[request_box], api_name="load_example")
 
         def _on_model(model_id: str | None, name: str):
             return _model_info(registry, model_id or ""), example_card(registry, name, model_id)
